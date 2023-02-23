@@ -51,7 +51,11 @@ class TestAsync(PyScriptTest):
             """
         )
         self.wait_for_console("DONE")
-        assert self.console.log.lines[-2:] == ["[3,2,1]", "DONE"]
+        log_lines = self.console.log.lines[-2:]
+        assert [each_log_line.replace(" ", "") for each_log_line in log_lines] == [
+            "[3, 2, 1]".replace(" ", ""),
+            "DONE",
+        ]
 
     def test_multiple_async(self):
         self.pyscript_run(
