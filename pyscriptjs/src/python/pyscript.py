@@ -223,6 +223,7 @@ def when(event=None, id=None):
             add_event_listener(element, event, func)
     return decorator
 
+
 def display(*values, target=None, append=True):
     default_target = get_current_display_target()
     if default_target is None and target is None:
