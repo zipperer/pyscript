@@ -9,7 +9,7 @@ export async function pyExec(interpreter: InterpreterClient, pysrc: string, outE
     //This is pyscript.py
     const pyscript_py = await interpreter.pyimport('pyscript');
     ensureUniqueId(outElem);
-    pyscript_py.set_current_display_target(outElem.id);
+    await pyscript_py.set_current_display_target(outElem.id);
     try {
         try {
             if (await pyscript_py.uses_top_level_await(pysrc)) {
@@ -44,11 +44,11 @@ export async function pyExec(interpreter: InterpreterClient, pysrc: string, outE
  *     pyDisplay(interpreter, obj);
  *     pyDisplay(interpreter, obj, { target: targetID });
  */
-export function pyDisplay(interpreter: InterpreterClient, obj: any, kwargs: object) {
-    const display = interpreter.globals.get('display');
-    if (kwargs === undefined) display(obj);
+export async function pyDisplay(interpreter: InterpreterClient, obj: any, kwargs: object) {
+    const display = await interpreter.globals.get('display');
+    if (kwargs === undefined) await display(obj);
     else {
-        display.callKwargs(obj, kwargs);
+        await display.callKwargs(obj, kwargs);
     }
 }
 

@@ -170,7 +170,7 @@ export function make_PyRepl(interpreter: InterpreterClient) {
 
             // display the value of the last evaluated expression (REPL-style)
             if (pyResult !== undefined) {
-                pyDisplay(interpreter, pyResult, { target: outEl.id });
+                await pyDisplay(interpreter, pyResult, { target: outEl.id });
             }
 
             this.autogenerateMaybe();

@@ -31,6 +31,7 @@ export enum ErrorCode {
 export class UserError extends Error {
   messageType: MessageType;
   errorCode: ErrorCode;
+  $$isUserError: boolean;
 
   constructor(errorCode: ErrorCode, message: string, t: MessageType = "text") {
     super(message);
@@ -38,6 +39,7 @@ export class UserError extends Error {
     this.name = "UserError";
     this.messageType = t;
     this.message = `(${errorCode}): ${message}`;
+    this.$$isUserError = true;
   }
 }
 
