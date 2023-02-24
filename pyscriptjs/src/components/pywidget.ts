@@ -28,7 +28,7 @@ function createWidget(interpreter: InterpreterClient, name: string, code: string
 
         async connectedCallback() {
             await interpreter.runButDontRaise(this.code);
-            this.proxyClass = interpreter.globals.get(this.klass);
+            this.proxyClass = await interpreter.globals.get(this.klass);
             this.proxy = this.proxyClass(this);
             this.proxy.connect();
             this.registerWidget();

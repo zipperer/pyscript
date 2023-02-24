@@ -7,12 +7,12 @@ const logger = getLogger('pyexec');
 
 export async function pyExec(interpreter: InterpreterClient, pysrc: string, outElem: HTMLElement) {
     //This is pyscript.py
-    const pyscript_py = interpreter._remote.interface.pyimport('pyscript');
+    const pyscript_py = await interpreter.pyimport('pyscript');
     ensureUniqueId(outElem);
     pyscript_py.set_current_display_target(outElem.id);
     try {
         try {
-            if (pyscript_py.uses_top_level_await(pysrc)) {
+            if (await pyscript_py.uses_top_level_await(pysrc)) {
                 throw new UserError(
                     ErrorCode.TOP_LEVEL_AWAIT,
                     'The use of top-level "await", "async for", and ' +
@@ -32,7 +32,7 @@ export async function pyExec(interpreter: InterpreterClient, pysrc: string, outE
             return {result: undefined};
         }
     } finally {
-        pyscript_py.set_current_display_target(undefined);
+        await pyscript_py.set_current_display_target(undefined);
         pyscript_py.destroy();
     }
 }
