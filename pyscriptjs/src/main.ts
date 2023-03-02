@@ -153,6 +153,8 @@ export class PyScriptApp {
 
         const interpreter_cfg = this.config.interpreters[0];
 
+        const worker = new Worker("build/workers/worker_interpreter.js");
+
         const remote_interpreter = new RemoteInterpreter(interpreter_cfg.src);
         const { port1, port2 } = new MessageChannel();
         port1.start();

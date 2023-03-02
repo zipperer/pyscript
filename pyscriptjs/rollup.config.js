@@ -21,7 +21,8 @@ if( !production ){
   copy_targets.targets.push({ src: 'build/*', dest: 'examples/build' })
 }
 
-export default {
+
+const pyscript_main = {
   input: "src/main.ts",
   output:[
     {
@@ -67,3 +68,17 @@ export default {
     clearScreen: false,
   },
 };
+
+const worker = {
+  input: "src/workers/worker_interpreter.ts",
+  output: {
+      file: "build/workers/worker_interpreter.js",
+      format: "iife",
+      sourcemap: true,
+      inlineDynamicImports: true,
+      name: "worker_interpreter",
+  }
+};
+
+
+export default [pyscript_main, worker];
