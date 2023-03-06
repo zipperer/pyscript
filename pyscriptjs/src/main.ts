@@ -164,7 +164,8 @@ export class PyScriptApp {
         // port2.start();
         // Synclink.expose(remote_interpreter, port2);
         // const wrapped_remote_interpreter = Synclink.wrap(port1);
-        this.interpreter = new InterpreterClient(this.config, this._stdioMultiplexer, wrapped_remote_interpreter as Synclink.Remote<RemoteInterpreter>); //, remote_interpreter);
+        this.interpreter = new InterpreterClient(this.config, this._stdioMultiplexer,
+                                                 wrapped_remote_interpreter as Synclink.Remote<RemoteInterpreter>);
 
 
         // now we load pyodide using importScripts, so we no longer have the

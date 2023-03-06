@@ -10,8 +10,7 @@ class TestBasic(PyScriptTest):
         self.pyscript_run(
             """
             <py-script>
-                import js
-                js.console.log('hello pyscript')
+                print('hello pyscript')
             </py-script>
             """
         )

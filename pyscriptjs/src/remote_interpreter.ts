@@ -69,13 +69,15 @@ export class RemoteInterpreter extends Object {
     async loadInterpreter(config: AppConfig, stdio: Stdio): Promise<void> {
         // XXX re-enable stdout
         this.interface = await loadPyodide({
-            // stdout: (msg: string) => {
-            //     // TODO: add syncify when moved to worker
-            //     stdio.stdout_writeline(msg);
-            // },
-            // stderr: (msg: string) => {
-            //     stdio.stderr_writeline(msg);
-            // },
+            stdout: (msg: string) => {
+                // XXX do we really want syncify here? We don't necessarily
+                // want to block the worker until the main thread has actually
+                // displayed the stdout
+                stdio.stdout_writeline(msg).syncify();
+            },
+            stderr: (msg: string) => {
+                stdio.stderr_writeline(msg).syncify();
+            },
             fullStdLib: false,
         })
 
