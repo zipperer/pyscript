@@ -69,6 +69,8 @@ const pyscript_main = {
   },
 };
 
+// XXX: I don't really know what I'm doing here, I just copied&pasted stuff
+// around until something worked
 const worker = {
   input: "src/workers/worker_interpreter.ts",
   output: {
@@ -77,7 +79,17 @@ const worker = {
       sourcemap: true,
       inlineDynamicImports: true,
       name: "worker_interpreter",
-  }
+  },
+  plugins: [
+    resolve({
+      browser: true,
+    }),
+    commonjs(),
+    typescript({
+      sourceMap: !production,
+      inlineSources: !production,
+    }),
+  ],
 };
 
 

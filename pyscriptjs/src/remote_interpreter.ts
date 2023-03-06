@@ -41,7 +41,7 @@ export class RemoteInterpreter extends Object {
         src = 'https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js'
     ) {
         super();
-        this.src = src;
+        this.src = src; // XXX this is currently ignored
     }
 
     /**
@@ -67,16 +67,17 @@ export class RemoteInterpreter extends Object {
      * path.
      */
     async loadInterpreter(config: AppConfig, stdio: Stdio): Promise<void> {
+        // XXX re-enable stdout
         this.interface = await loadPyodide({
-            stdout: (msg: string) => {
-                // TODO: add syncify when moved to worker
-                stdio.stdout_writeline(msg);
-            },
-            stderr: (msg: string) => {
-                stdio.stderr_writeline(msg);
-            },
+            // stdout: (msg: string) => {
+            //     // TODO: add syncify when moved to worker
+            //     stdio.stdout_writeline(msg);
+            // },
+            // stderr: (msg: string) => {
+            //     stdio.stderr_writeline(msg);
+            // },
             fullStdLib: false,
-        });
+        })
 
         // TODO: Remove this once `runtimes` is removed!
         this.interpreter = this.interface;

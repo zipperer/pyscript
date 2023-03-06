@@ -154,16 +154,25 @@ export class PyScriptApp {
         const interpreter_cfg = this.config.interpreters[0];
 
         const worker = new Worker("build/workers/worker_interpreter.js");
+        const worker_initialize_proxy: any = Synclink.wrap(worker);
+        const wrapped_remote_interpreter = await worker_initialize_proxy();
 
-        const remote_interpreter = new RemoteInterpreter(interpreter_cfg.src);
-        const { port1, port2 } = new MessageChannel();
-        port1.start();
-        port2.start();
-        Synclink.expose(remote_interpreter, port2);
-        const wrapped_remote_interpreter = Synclink.wrap(port1);
-        this.interpreter = new InterpreterClient(this.config, this._stdioMultiplexer, wrapped_remote_interpreter as Synclink.Remote<RemoteInterpreter>, remote_interpreter);
 
-        this.logStatus(`Downloading ${interpreter_cfg.name}...`);
+        // const remote_interpreter = new RemoteInterpreter(interpreter_cfg.src);
+        // const { port1, port2 } = new MessageChannel();
+        // port1.start();
+        // port2.start();
+        // Synclink.expose(remote_interpreter, port2);
+        // const wrapped_remote_interpreter = Synclink.wrap(port1);
+        this.interpreter = new InterpreterClient(this.config, this._stdioMultiplexer, wrapped_remote_interpreter as Synclink.Remote<RemoteInterpreter>); //, remote_interpreter);
+
+
+        // now we load pyodide using importScripts, so we no longer have the
+        // <script> hack and we don't need the script.addEventListener. XXX:
+        // check that everything works as intended and mill the code below
+        this.afterInterpreterLoad(this.interpreter);
+
+        //this.logStatus(`Downloading ${interpreter_cfg.name}...`);
 
         // download pyodide by using a <script> tag. Once it's ready, the
         // "load" event will be fired and the exeuction logic will continue.
@@ -171,14 +180,15 @@ export class PyScriptApp {
         // exception which is throw inside the event handler is *NOT* caught
         // by the try/catch inside main(): that's why we need to .catch() it
         // explicitly and call _handleUserErrorMaybe also there.
-        const script = document.createElement('script'); // create a script DOM node
-        script.src = await this.interpreter._remote.src;
-        script.addEventListener('load', () => {
-            this.afterInterpreterLoad(this.interpreter).catch(async (error) => {
-                await this._handleUserErrorMaybe(error);
-            });
-        });
-        document.head.appendChild(script);
+
+        // const script = document.createElement('script'); // create a script DOM node
+        // script.src = await this.interpreter._remote.src;
+        // script.addEventListener('load', () => {
+        //     this.afterInterpreterLoad(this.interpreter).catch(async (error) => {
+        //         await this._handleUserErrorMaybe(error);
+        //     });
+        // });
+        // document.head.appendChild(script);
     }
 
     // lifecycle (5)
@@ -244,7 +254,8 @@ export class PyScriptApp {
         import js
         import pyscript
         from pyscript import Element, display, HTML
-        pyscript._install_deprecated_globals_2022_12_1(globals())
+        # XXX: this fails in various way, we should either fix or kill
+        # pyscript._install_deprecated_globals_2022_12_1(globals())
         `);
 
         if (this.config.packages) {
