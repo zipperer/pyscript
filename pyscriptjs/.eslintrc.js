@@ -16,7 +16,7 @@ module.exports = {
         browser: true,
     },
     plugins: ['@typescript-eslint'],
-    ignorePatterns: ['node_modules'],
+    ignorePatterns: ['node_modules', 'src/interpreter_worker/*'],
     rules: {
         'no-prototype-builtins': 'error',
         '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
